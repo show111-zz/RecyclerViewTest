@@ -42,12 +42,14 @@ public class RecyclerRefreshActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recycler_refresh_layout);
+
         top_bar_linear_back=(LinearLayout)this.findViewById(R.id.top_bar_linear_back);
         top_bar_linear_back.setOnClickListener(new CustomOnClickListener());
         top_bar_title=(TextView)this.findViewById(R.id.top_bar_title);
-        top_bar_title.setText("RecyclerView下拉刷新,下拉加载更多...");
+        top_bar_title.setText("");
         demo_swiperefreshlayout=(SwipeRefreshLayout)this.findViewById(R.id.demo_swiperefreshlayout);
         demo_recycler=(RecyclerView)this.findViewById(R.id.demo_recycler);
+
         //设置刷新时动画的颜色，可以设置4个
         demo_swiperefreshlayout.setProgressBackgroundColorSchemeResource(android.R.color.white);
         demo_swiperefreshlayout.setColorSchemeResources(android.R.color.holo_blue_light,
@@ -59,9 +61,13 @@ public class RecyclerRefreshActivity extends BaseActivity {
         linearLayoutManager=new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         demo_recycler.setLayoutManager(linearLayoutManager);
+
         //添加分隔线
         demo_recycler.addItemDecoration(new AdvanceDecoration(this, OrientationHelper.VERTICAL));
         demo_recycler.setAdapter(adapter = new RefreshRecyclerAdapter(this));
+
+
+        //下拉加载
         demo_swiperefreshlayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -72,15 +78,16 @@ public class RecyclerRefreshActivity extends BaseActivity {
                         List<String> newDatas = new ArrayList<String>();
                         for (int i = 0; i < 5; i++) {
                             int index = i + 1;
-                            newDatas.add("new item" + index);
+                            newDatas.add("底部refresh" + index);
                         }
                         adapter.addItem(newDatas);
-                        demo_swiperefreshlayout.setRefreshing(false);
+                        demo_swiperefreshlayout.setRefreshing(false);//设置自动更新
                         Toast.makeText(RecyclerRefreshActivity.this, "更新了五条数据...", Toast.LENGTH_SHORT).show();
                     }
                 }, 1500);
             }
         });
+
         //RecyclerView滑动监听
         demo_recycler.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -93,7 +100,7 @@ public class RecyclerRefreshActivity extends BaseActivity {
                             List<String> newDatas = new ArrayList<String>();
                             for (int i = 0; i < 5; i++) {
                                 int index = i + 1;
-                                newDatas.add("more item" + index);
+                                newDatas.add("底部" + index);
                             }
                             adapter.addMoreItem(newDatas);
                         }
@@ -107,10 +114,12 @@ public class RecyclerRefreshActivity extends BaseActivity {
             }
         });
     }
+
     class CustomOnClickListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
             RecyclerRefreshActivity.this.finish();
         }
     }
+
 }

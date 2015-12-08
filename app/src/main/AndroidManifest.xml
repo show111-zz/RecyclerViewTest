@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".Widget.RecyclerRefreshActivity"
+            android:name=".Widget.RecyclerFootActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
@@ -21,7 +21,7 @@
 
         <activity android:name=".Widget.BaseActivity"/>
         <activity android:name=".Widget.BaseFrameActvity"/>
-        <activity android:name=".Widget.RecyclerFootActivity"/>
+        <activity android:name=".Widget.RecyclerRefreshActivity"/>
     </application>
 
 </manifest>

@@ -42,12 +42,14 @@ public class RecyclerFootActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recycler_footview_layout);
+
         top_bar_linear_back=(LinearLayout)this.findViewById(R.id.top_bar_linear_back);
         top_bar_linear_back.setOnClickListener(new CustomOnClickListener());
         top_bar_title=(TextView)this.findViewById(R.id.top_bar_title);
         top_bar_title.setText("RecyclerView使用FootView进行上拉加载更多...");
         demo_swiperefreshlayout=(SwipeRefreshLayout)this.findViewById(R.id.demo_swiperefreshlayout);
         demo_recycler=(RecyclerView)this.findViewById(R.id.demo_recycler);
+
         //设置刷新时动画的颜色，可以设置4个
         demo_swiperefreshlayout.setProgressBackgroundColorSchemeResource(android.R.color.white);
         demo_swiperefreshlayout.setColorSchemeResources(android.R.color.holo_blue_light,
@@ -59,9 +61,11 @@ public class RecyclerFootActivity extends BaseActivity {
         linearLayoutManager=new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         demo_recycler.setLayoutManager(linearLayoutManager);
+
         //添加分隔线
         demo_recycler.addItemDecoration(new AdvanceDecoration(this, OrientationHelper.VERTICAL));
         demo_recycler.setAdapter(adapter = new RefreshFootAdapter(this));
+        //下拉加载
         demo_swiperefreshlayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -72,7 +76,7 @@ public class RecyclerFootActivity extends BaseActivity {
                         List<String> newDatas = new ArrayList<String>();
                         for (int i = 0; i < 5; i++) {
                             int index = i + 1;
-                            newDatas.add("new item" + index);
+                            newDatas.add("底部RecyclerFootActivity" + index);
                         }
                         adapter.addItem(newDatas);
                         demo_swiperefreshlayout.setRefreshing(false);
@@ -81,23 +85,23 @@ public class RecyclerFootActivity extends BaseActivity {
                 }, 5000);
             }
         });
-        //RecyclerView滑动监听
+        //RecyclerView滑动监听  上拉加载
         demo_recycler.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.getItemCount()) {
-                    adapter.changeMoreStatus(RefreshFootAdapter.LOADING_MORE);
+                    adapter.changeMoreStatus(RefreshFootAdapter.LOADING_MORE);//正在加载
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             List<String> newDatas = new ArrayList<String>();
                             for (int i = 0; i < 5; i++) {
                                 int index = i + 1;
-                                newDatas.add("more item" + index);
+                                newDatas.add("Foot" + index);
                             }
                             adapter.addMoreItem(newDatas);
-                            adapter.changeMoreStatus(RefreshFootAdapter.PULLUP_LOAD_MORE);
+                            adapter.changeMoreStatus(RefreshFootAdapter.PULLUP_LOAD_MORE);//上拉加载更多
                         }
                     }, 2500);
                 }
